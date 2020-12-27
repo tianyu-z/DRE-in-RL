@@ -294,6 +294,7 @@ def main():
             # if episode>100, train with the lstm as the domain classifer
             elif memory.size() > 500 and n_epi >= 100:
                 train(model, optimizer, memory, lstm=lstm)
+
         if n_epi % print_interval == 0 and n_epi != 0:
             print(
                 "# of episode :{}, avg score : {:.1f}, buffer size : {}".format(
@@ -302,11 +303,12 @@ def main():
             )
             save_dict["n_epi"].append(n_epi)
             save_dict["score"].append(score)
-            if n_epi % save_interval == 0 and n_epi != 0:
-                save_dict["model"] = model.cpu().state_dict()
-                save_dict["lstm"] = lstm.cpu().state_dict()
-                torch.save(save_dict, "ckpt_{}_with_lstm.pth".format(n_epi))
             score = 0.0
+
+        if n_epi % save_interval == 0 and n_epi != 0:
+            save_dict["model"] = model.cpu().state_dict()
+            save_dict["lstm"] = lstm.cpu().state_dict()
+            torch.save(save_dict, "ckpt_{}_with_lstm.pth".format(n_epi))
     env.close()
 
 
