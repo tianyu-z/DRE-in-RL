@@ -237,8 +237,8 @@ def main():
         s = env.reset()
         done = False
 
-        # train the lstm domain classifier
-        if n_epi > 0:
+        # train the lstm domain classifier after some episode because we need to collect some tensor data for training
+        if n_epi > 100:
             print("Training the lstm classifier.")
             optimizer_lstm.zero_grad()
             min_len = min([len(tensor_data_old), len(tensor_data)])
@@ -276,7 +276,7 @@ def main():
                 prob_numpy = prob.detach().numpy()
                 seq_data.append((s, a, r / 100.0, prob_numpy, done))
 
-                # contructing input tensor for lstm
+                # collect input tensor for lstm
                 s0 = s.copy()
                 s0 = np.append(s0, a)
                 s0 = np.append(s0, r / 100)
